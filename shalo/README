@@ -1,0 +1,14 @@
+The three S-lang files should go into the halo/ directory as drop-in
+replacements for the existing material (I'd make sure to keep the
+originals.).  The two fits files should go into the same directory as
+the dsdO_2.20.fits and dsdO_3.30.fits files.  In your case, that's
+/local/data/orcrist2/valencic/home_halo_fitting/ciao34/dat.
+
+I'll note I have new versions of those dsdO files, but let's not
+change more than we need to right now.  I'll also note that in my test
+cases I'm finding that the Mie table version of shalox (HaloModel=4) is giving
+similar shapes as the Exact RG version (HaloModel=3), but the norm
+seems to be different.  This is probably due to me dropping a factor
+of 2 or Pi or something somewhere; we'll have to get this tracked
+down, but I wanted to give you something to start with.
+
