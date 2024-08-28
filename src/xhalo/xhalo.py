@@ -4,14 +4,15 @@ class Source:
     Class representing a source of x-ray emission.
     """ # AUTUMN: increase specificity
 
-    def __init__(self, N_H=None, r=None, s=None, f=None): # AUTUMN add defaults
+    def __init__(self, N_H=1e22, E=None, f=1, R=None, ): # AUTUMN add defaults
         """
         Initialize an x-ray Source instance.
         """
 
         self.N_H = N_H
-        self.r = r 
-        self.s = f
+        self.R = R
+        self.E = E
+        self.f = f
 
         self.halo = None
     

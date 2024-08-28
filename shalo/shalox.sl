@@ -134,75 +134,74 @@ define shalox() {
    } else {
       E_cm = E;
       switch (DustModel)
-	{ case 1 : dVec = [0,1]; }      % MRN 
-	{ case 2 : dVec = [2,3]; }      % WD01
-	{ case 3 : dVec = [4,5]; }      % Witt, Smith, Dwek
-	{ case 4 : dVec = [6,7,8]; }    % ZDA BARE-GR-S
-	{ case 5 : dVec = [11,12,13]; } % ZDA BARE-GR-FB
-	{ case 6 : dVec = [16,17,18]; } % ZDA BARE-GR-B
-	{ case 7 : dVec = [36,37,38,39]; } % ZDA BARE-AC-S
-	{ case 8 : dVec = [41,42,43,44]; } % ZDA BARE-AC-FG
-	{ case 9 : dVec = [46,47,48,49]; } % ZDA BARE-AC-B
-	{ case 10: dVec = [21,22,23,25]; } % ZDA COMP-GR-S
-	{ case 11: dVec = [26,27,28,30]; } % ZDA COMP-GR-FG
-	{ case 12: dVec = [31,32,33,35]; } % ZDA COMP-GR-B
-	{ case 13: dVec = [51,52,53,54,55]; } % ZDA COMP-AC-S
-	{ case 14: dVec = [56,57,58,59,60]; } % ZDA COMP-AC-FG
-	{ case 15: dVec = [61,62,63,64,65]; } % ZDA COMP-AC-B
-	{ case 16: dVec = [66,68,69,70]; } % ZDA COMP-NC-S
-	{ case 17: dVec = [71,73,74,75]; } % ZDA COMP-NC-FG
-	{ case 18: dVec = [76,78,79,80]; } % ZDA COMP-NC-B
-	{ case 19: dVec = [81,82]; }       % WD01 SMC
-	{ case 20: dVec = [0,1]; }  % MRN, repeated
-	{ case 21: dVec = [83,84]; }  % WD01 type 1
-	{ case 22: dVec = [85,86]; }  % WD01 type 2
-	{ case 23: dVec = [87,88]; }  % WD01 type 3
-	{ case 24: dVec = [89,90]; }  % WD01 type 4
-	{ case 25: dVec = [91,92]; }  % WD01 type 5
-	{ case 26: dVec = [93,94]; }  % WD01 type 6
-	{ case 27: dVec = [95,96]; }  % WD01 type 7
-	{ case 28: dVec = [97,98]; }  % WD01 type 8
-	{ case 29: dVec = [99,100]; }  % WD01 type 9
-	{ case 30: dVec = [101,102]; }  % WD01 type 10
-	{ case 31: dVec = [103,104]; }  % WD01 type 11
-	{ case 32: dVec = [105,106]; }  % WD01 type 12
-	{ case 33: dVec = [107,108]; }  % WD01 type 13
-	{ case 34: dVec = [109,110]; }  % WD01 type 14
-	{ case 35: dVec = [111,112]; }  % WD01 type 15
-	{ case 36: dVec = [113,114]; }  % WD01 type 16
-	{ case 37: dVec = [115,116]; }  % WD01 type 17
-	{ case 38: dVec = [117,118]; }  % WD01 type 18
-	{ case 39: dVec = [119,120]; }  % WD01 type 19
-	{ case 40: dVec = [121,122]; }  % WD01 type 20
-	{ case 41: dVec = [123,124]; }  % WD01 type 21
-	{ case 42: dVec = [125,126]; }  % WD01 type 22
-	{ case 43: dVec = [127,128]; }  % WD01 type 23
-	{ case 44: dVec = [129,130]; }  % WD01 type 24
-	{ case 45: dVec = [131,132]; }  % WD01 type 25
-	{ case 46: dVec = [133,134]; }  % WD01 type 26 LMC avg
-	{ case 47: dVec = [135,136]; }  % WD01 type 27 LMC avg
-	{ case 48: dVec = [137,138]; }  % WD01 type 28 LMC avg
-	{ case 49: dVec = [139,140]; }  % WD01 type 29 LMC 2
-	{ case 50: dVec = [141,142]; }  % WD01 type 30 LMC 2
-	{ case 51: dVec = [143,144]; }  % WD01 type 31 LMC 2
-	{ case 52: dVec = [145,146]; }  % WD01 type 32  (SMC bar)
+      { case 1 : dVec = [0,1]; }      % MRN 
+      { case 2 : dVec = [2,3]; }      % WD01
+      { case 3 : dVec = [4,5]; }      % Witt, Smith, Dwek
+      { case 4 : dVec = [6,7,8]; }    % ZDA BARE-GR-S
+      { case 5 : dVec = [11,12,13]; } % ZDA BARE-GR-FB
+      { case 6 : dVec = [16,17,18]; } % ZDA BARE-GR-B
+      { case 7 : dVec = [36,37,38,39]; } % ZDA BARE-AC-S
+      { case 8 : dVec = [41,42,43,44]; } % ZDA BARE-AC-FG
+      { case 9 : dVec = [46,47,48,49]; } % ZDA BARE-AC-B
+      { case 10: dVec = [21,22,23,25]; } % ZDA COMP-GR-S
+      { case 11: dVec = [26,27,28,30]; } % ZDA COMP-GR-FG
+      { case 12: dVec = [31,32,33,35]; } % ZDA COMP-GR-B
+      { case 13: dVec = [51,52,53,54,55]; } % ZDA COMP-AC-S
+      { case 14: dVec = [56,57,58,59,60]; } % ZDA COMP-AC-FG
+      { case 15: dVec = [61,62,63,64,65]; } % ZDA COMP-AC-B
+      { case 16: dVec = [66,68,69,70]; } % ZDA COMP-NC-S
+      { case 17: dVec = [71,73,74,75]; } % ZDA COMP-NC-FG
+      { case 18: dVec = [76,78,79,80]; } % ZDA COMP-NC-B
+      { case 19: dVec = [81,82]; }       % WD01 SMC
+      { case 20: dVec = [0,1]; }  % MRN, repeated
+      { case 21: dVec = [83,84]; }  % WD01 type 1
+      { case 22: dVec = [85,86]; }  % WD01 type 2
+      { case 23: dVec = [87,88]; }  % WD01 type 3
+      { case 24: dVec = [89,90]; }  % WD01 type 4
+      { case 25: dVec = [91,92]; }  % WD01 type 5
+      { case 26: dVec = [93,94]; }  % WD01 type 6
+      { case 27: dVec = [95,96]; }  % WD01 type 7
+      { case 28: dVec = [97,98]; }  % WD01 type 8
+      { case 29: dVec = [99,100]; }  % WD01 type 9
+      { case 30: dVec = [101,102]; }  % WD01 type 10
+      { case 31: dVec = [103,104]; }  % WD01 type 11
+      { case 32: dVec = [105,106]; }  % WD01 type 12
+      { case 33: dVec = [107,108]; }  % WD01 type 13
+      { case 34: dVec = [109,110]; }  % WD01 type 14
+      { case 35: dVec = [111,112]; }  % WD01 type 15
+      { case 36: dVec = [113,114]; }  % WD01 type 16
+      { case 37: dVec = [115,116]; }  % WD01 type 17
+      { case 38: dVec = [117,118]; }  % WD01 type 18
+      { case 39: dVec = [119,120]; }  % WD01 type 19
+      { case 40: dVec = [121,122]; }  % WD01 type 20
+      { case 41: dVec = [123,124]; }  % WD01 type 21
+      { case 42: dVec = [125,126]; }  % WD01 type 22
+      { case 43: dVec = [127,128]; }  % WD01 type 23
+      { case 44: dVec = [129,130]; }  % WD01 type 24
+      { case 45: dVec = [131,132]; }  % WD01 type 25
+      { case 46: dVec = [133,134]; }  % WD01 type 26 LMC avg
+      { case 47: dVec = [135,136]; }  % WD01 type 27 LMC avg
+      { case 48: dVec = [137,138]; }  % WD01 type 28 LMC avg
+      { case 49: dVec = [139,140]; }  % WD01 type 29 LMC 2
+      { case 50: dVec = [141,142]; }  % WD01 type 30 LMC 2
+      { case 51: dVec = [143,144]; }  % WD01 type 31 LMC 2
+      { case 52: dVec = [145,146]; }  % WD01 type 32  (SMC bar)
 
       Isca_calc = Double_Type [length(Theta)];
       for (iT=0;iT<length(Theta);iT++) {
+         Th_cm = (Theta[iT] + Theta_Hi[iT])/2.0;
+         dT_cm = Theta_Hi[iT] - Theta[iT];
+         Isca_calc[iT] = 0.0;
 
-	 Th_cm = (Theta[iT] + Theta_Hi[iT])/2.0;
-	 dT_cm = Theta_Hi[iT] - Theta[iT];
-	 Isca_calc[iT] = 0.0;
-
-	 for (iD=0;iD<length(dVec);iD++) {
-	    dust_cm = dust[dVec[iD]];
-	    (dqag_result, dqag_abserr, dqag_neval, dqag_ier) =
-	      dqag(&halox_func, dust[dVec[iD]].Amin, dust[dVec[iD]].Amax);
-	    if (dqag_ier != 0) vmessage("dqag: %f, %d, %d",
-					dqag_abserr, dqag_neval, dqag_ier);
-	    %vmessage("%d, I[%d], %d evals",dVec[iD], iT, dqag_neval);
-	    Isca_calc[iT] += dqag_result;
-	 }
+         for (iD=0;iD<length(dVec);iD++) {
+            dust_cm = dust[dVec[iD]];
+            (dqag_result, dqag_abserr, dqag_neval, dqag_ier) =
+               dqag(&halox_func, dust[dVec[iD]].Amin, dust[dVec[iD]].Amax);
+            if (dqag_ier != 0) vmessage("dqag: %f, %d, %d",
+                     dqag_abserr, dqag_neval, dqag_ier);
+            %vmessage("%d, I[%d], %d evals",dVec[iD], iT, dqag_neval);
+            Isca_calc[iT] += dqag_result;
+         }
       }
       Isca_calc_AA[Estr] = Isca_calc;
    }

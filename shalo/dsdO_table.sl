@@ -1,3 +1,4 @@
+require("evalfile")
 private define GetHdrKey() { % header ,keyword, integer
    
    variable i, Nel, result=NULL;

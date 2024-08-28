@@ -1,3 +1,6 @@
+%shalo.sl
+require("interpol");
+require("erfc");
 variable Th_cm, dT_cm, dust_cm, HF_cm;
 static variable Isca_calc_AA = Assoc_Type [];
 static variable Isca_calc;
@@ -195,20 +198,19 @@ define shalo() {
 
       Isca_calc = Double_Type [length(Theta)];
       for (iT=0;iT<length(Theta);iT++) {
+         Th_cm = (Theta[iT] + Theta_Hi[iT])/2.0;
+         dT_cm = Theta_Hi[iT] - Theta[iT];
+         Isca_calc[iT] = 0.0;
 
-	 Th_cm = (Theta[iT] + Theta_Hi[iT])/2.0;
-	 dT_cm = Theta_Hi[iT] - Theta[iT];
-	 Isca_calc[iT] = 0.0;
-
-	 for (iD=0;iD<length(dVec);iD++) {
-	    dust_cm = dust[dVec[iD]];
-	    (dqag_result, dqag_abserr, dqag_neval, dqag_ier) =
-	      dqag(&halo_func, dust[dVec[iD]].Amin, dust[dVec[iD]].Amax);
-	    if (dqag_ier != 0) vmessage("dqag: %f, %d, %d",
-					dqag_abserr, dqag_neval, dqag_ier);
-	    %vmessage("%d, I[%d], %d evals",dVec[iD], iT, dqag_neval);
-	    Isca_calc[iT] += dqag_result;
-	 }
+         for (iD=0;iD<length(dVec);iD++) {
+            dust_cm = dust[dVec[iD]];
+            (dqag_result, dqag_abserr, dqag_neval, dqag_ier) =
+               dqag(&halo_func, dust[dVec[iD]].Amin, dust[dVec[iD]].Amax);
+            if (dqag_ier != 0) vmessage("dqag: %f, %d, %d",
+                     dqag_abserr, dqag_neval, dqag_ier);
+            %vmessage("%d, I[%d], %d evals",dVec[iD], iT, dqag_neval);
+            Isca_calc[iT] += dqag_result;
+         }
       }
       Isca_calc_AA[Estr] = Isca_calc;
    }
