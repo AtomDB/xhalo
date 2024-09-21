@@ -1,8 +1,7 @@
+import scipy.integrate as integrate
+import numpy as np
+import math
 class Halo:
-    import scipy.integrate as integrate
-    import numpy as np
-    import math
-
     def __init__(self, N_H, E, dusts = None, scatter_model = "GaussRG"):
         self.E = E #AUTUMN: allow for multiple E segments
         self.N_H = N_H
@@ -14,6 +13,7 @@ class Halo:
         elif self.scatter_model == "ExactRG":
             print("The exact Rayleigh Gans Approximation has not yet been introduced to this program.")
         elif self.scatter_model == "":
+            pass
         
     # #AUTUMN : allow other scatter models
     # def dsigma_dOmega(self, a, dust, theta):
@@ -26,7 +26,7 @@ class Halo:
         # modeled from shalo.sl
         import math
         c = 1.1*8.4616e-8
-        F = dust.F(self.E)
+        F = dust.henke_F(self.E)
 
         beta = self.E * a * (theta/60) * 0.4575**.5
 
@@ -48,7 +48,7 @@ class Halo:
     
     def plot_I(self):
         from matplotlib import pyplot as plt
-        thetas = np.linspace(0,30,100)
+        thetas = np.linspace(5,30,100)
         I_vals = np.empty(thetas.size)
         for index,theta in enumerate(thetas):
             I_vals[index] = self.I(theta)

@@ -1,31 +1,52 @@
 import math
 import scipy.integrate as integrate
 import scipy.constants as constants
+from scipy import interpolate 
 import numpy as np
 import pandas as pd
 
 class Dust:
     """
-    Class representing a specific dust composition.
+    Class representing a dust composition.
+    ------------------------------------------
+    Attributes:
+        name (str):
+            The name of this dust composition.
+        a_min (float or astropy Quantity):
+            The minimum radius of dust grains. 
+            Assumed units: [um]
+        a_max (float or Quantity):
+            The maximum radius of dust grains.
+            Assumed units: [um]
+        rho (float of Quantity):
+            The density of the material within a dust grain.
+            Assumed units: [g/cm^2]
+        ppm (float):
+            Number of dust grains per million hydrogen atoms.
+            Assumed Units: ppm = [grains/(10^6 H_atoms)]
+            Ex: ppm=33 means there are 33 dust grains per million hydrogen atoms.
+        atom_weight (float or quantity):
+            The weight of one mole of the material of this composition.
+            Assumed units: [g/mol]
+        henke_E 
 
-    Attributes
-    ----------
+        
 
     """
 
-    def __init__(self, name, a_min, a_max, size_func, rho, ppm, atom_weight):
+    def __init__(self, name, size_func, a_min, a_max, \
+                 rho, ppm, atom_weight, henke_F):
         self.name = name
         self.a_min = a_min #um
         self.a_max = a_max #um
         self.rho = rho # [g/cm^3]
-        self.ppm = ppm * 1e-6 # grains per H atom [grains/H_atoms]
+        self.ppm = ppm # grains per million H atoms [grains/H_atoms]
         self.atom_weight = atom_weight # [g/mol]
-        self.henke_E = None
-        self.henke_F = None
-
+        
         self.size_func = size_func # function of a
+        self.henke_F = henke_F # function of E
  
-        self.norm = (self.ppm * self.atom_weight) / (constants.N_A * self._total_mass()) # unitless  
+        self.norm = (self.ppm * 1e-6 * self.atom_weight) / (constants.N_A * self._total_mass()) # unitless  
     
     def __str__(self):
             summary = f"""
@@ -55,9 +76,13 @@ class Dust:
             return self.size_func(a) * (4/3) * math.pi * (a/1e4)**3 * self.rho
         
         return integrate.quad(mass_dist, self.a_min, self.a_max)[0]
-    
+
 class Silicate(Dust):
     def __init__(self):
+        data = pd.read_csv("dust_data/silicate_f.csv", header=None, names=["E","F"], sep='\s+')
+        henke_E = np.array(data["E"])
+        henke_F = np.array(data["F"])
+
         Dust.__init__(
             self,
             name = "Silicate",
@@ -66,21 +91,19 @@ class Silicate(Dust):
             size_func = self.size_func,
             rho = 3.3, #g/cm^3
             ppm = 33,
-            atom_weight = 172)
+            atom_weight = 172,
+            henke_F = interpolate.interp1d(henke_E, henke_F))
 
     def size_func(self, a):
         # return grains/H_atom/um for grain size a in um
         return a**-3.5
     
-    def F(self,E):
-        if self.henke_E is None or self.henke_F is None:
-            data = pd.read_csv("dust_data/silicate_f.csv", header=None, names=["E","F"], sep='\s+')
-            self.henke_E = np.array(data["E"])
-            self.henke_F = np.array(data["F"])
-        return np.interp(E, self.henke_E, self.henke_F)
-    
 class Graphite(Dust):
     def __init__(self):
+        data = pd.read_csv("dust_data/graphite_f.csv", header=None, names=["E","F"], sep='\s+')
+        henke_E = np.array(data["E"])
+        henke_F = np.array(data["F"])
+
         Dust.__init__(
             self,
             name = "Graphite",
@@ -89,14 +112,8 @@ class Graphite(Dust):
             size_func = self.size_func,
             rho = 2.2, #g/cm^3
             ppm = 270,
-            atom_weight = 12)
+            atom_weight = 12,
+            henke_F = interpolate.interp1d(henke_E, henke_F))
 
     def size_func(self, a):
         return a**-3.5
-    
-    def F(self,E):
-        if self.henke_E is None or self.henke_F is None:
-            data = pd.read_csv("dust_data/graphite_f.csv", header=None, names=["E","F"], sep='\s+')
-            self.henke_E = np.array(data["E"])
-            self.henke_F = np.array(data["F"])
-        return np.interp(E, self.henke_E, self.henke_F)
