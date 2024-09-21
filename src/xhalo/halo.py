@@ -37,12 +37,12 @@ class Halo:
             print("WARNING: The implementation of nonuniform dust \
                   distributions is not yet complete.")
 
-        if self.scatter_model == "GaussRG" and x is None:
+        if self.scatter_model == "GaussRG":
             self.dsigma_dOmega = self._gaussRG_dsigma_dOmega
-        elif self.scatter_model == "GaussRG" and x is not None:
-            self.dsigma_dOmega = self.gaussRGx_dsigma_dOmega
-        elif self.scatter_model == "ExactRG":
+        elif self.scatter_model == "InfCylRG":
             print("The exact Rayleigh Gans Approximation has not yet been introduced to this program.")
+        elif self.scatter_model == "ExactRG":
+            self.dsigma_dOmega = self._exactRG_dsigma_dOmega
         elif self.scatter_model == "":
             pass
         
@@ -54,6 +54,9 @@ class Halo:
     #     return (c * math.pi**.5 * F * (dust.rho/3)**2 * a**6 * exponent)
 
     def _gaussRG_dsigma_dOmega(self, a, dust, theta):
+        """
+        Calculate dsigma/dOmega with a gaussian approximation for Rayleigh Gans Scattering.
+        """
         # modeled from shalo.sl
         import math
         c = 1.1*8.4616e-8
@@ -62,8 +65,38 @@ class Halo:
         beta = self.E * a * (theta/60) * 0.4575**.5
 
         return c * a**6 * math.pi**.5 * F * (dust.rho/3)**2 * (math.erfc(beta)/(2*beta))
+    
+    def _infCylRG_dsigma_dOmega(self, a, dust, theta):
+        """
+        Calculate Rayleigh Gans dsigma/dOmega with infinite cylinder dust grains.
+        """
+        return 0
+    
+    def _exactRG_dsigma_dOmega(self, a, dust, theta):
+        """
+        Calculate dsigma/dOmega with exact Rayleigh Gans.
+        """
+        # modeled from shalo.sl
+        def sii(x):
+            def integrand(x):
+                return math.sin(x)/x
+            return integrate.quad(integrand, 0, x)[0]
 
+        c = 1.1*8.4616e-8
+        F = dust.henke_F(self.E)
+
+        K1 = 1.474 * a * (theta/60) * self.E 
+        y1 = 9 * (3 
+                  + 5 * K1**2
+                  + 2 * math.pi * K1**5
+                  + (-3 + K1**2  - 2*K1**4) * math.cos(2*K1) 
+                  - 6 * K1 * math.sin(2*K1) 
+                  - math.sin(2*K1) * K1**3 
+                  - 4 * K1**5 * sii(2*K1)) / (30 * K1**6)
         
+        return c * a**6 * F * (dust.rho/3.0)**2 * y1
+
+
     def I(self, theta):
         I = 0
         for dust in self.dust_model:
