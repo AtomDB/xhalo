@@ -24,14 +24,14 @@ class Dust:
         ppm (float):
             Number of dust grains per million hydrogen atoms.
             Assumed Units: ppm = [grains/(10^6 H_atoms)]
-            Ex: ppm=33 means there are 33 dust grains per million hydrogen atoms.
+            Ex: ppm=33 means there are 33 dust grains per 
+                million hydrogen atoms.
         atom_weight (float or quantity):
-            The weight of one mole of the material of this composition.
+            The weight of one mole of this material.
             Assumed units: [g/mol]
-        henke_E 
-
-        
-
+        norm (float or Quantity):
+            The factor used for normalizing the size function.
+            Assumed units: Unitless
     """
 
     def __init__(self, name, size_func, a_min, a_max, \
