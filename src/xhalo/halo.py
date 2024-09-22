@@ -43,8 +43,8 @@ class Halo:
             print("The exact Rayleigh Gans Approximation has not yet been introduced to this program.")
         elif self.scatter_model == "ExactRG":
             self.dsigma_dOmega = self._exactRG_dsigma_dOmega
-        elif self.scatter_model == "":
-            pass
+        elif self.scatter_model == "Mie":
+            self.dsigma_dOmega = self._mie_dsigma_dOmega
         
     # #AUTUMN : allow other scatter models
     # def gaussRG_dsigma_dOmega(self, a, dust, theta):
@@ -100,8 +100,7 @@ class Halo:
         """
         Calculate Mie solution to dsigma/dOmega
         """
-        return 0
-
+        return dust.get_mie_dsigma_dOmega(a, theta, self.E)
 
     def I(self, theta):
         I = 0

@@ -5,6 +5,9 @@ from scipy import interpolate
 import numpy as np
 import pandas as pd
 
+from astropy.io import fits
+from astropy.table import Table
+
 class Dust:
     """
     Class representing a dust composition.
@@ -32,10 +35,11 @@ class Dust:
         norm (float or Quantity):
             The factor used for normalizing the size function.
             Assumed units: Unitless
+        file (str)
     """
 
     def __init__(self, name, size_func, a_min, a_max, \
-                 rho, ppm, atom_weight, henke_F, file = None):
+                 rho, ppm, atom_weight, henke_F, mie_file = None):
         self.name = name
         self.a_min = a_min #um
         self.a_max = a_max #um
@@ -46,7 +50,11 @@ class Dust:
         self.size_func = size_func # function of a
         self.henke_F = henke_F # function of E
  
-        self.norm = (self.ppm * 1e-6 * self.atom_weight) / (constants.N_A * self._total_mass()) # unitless  
+        self.norm = (self.ppm * 1e-6 * self.atom_weight) / (constants.N_A * self._total_mass()) # unitless 
+        
+        self._mie_file = mie_file
+        self._mie_loaded = False
+        self._mie_table = None
     
     def __str__(self):
             summary = f"""
@@ -67,6 +75,36 @@ class Dust:
         a_vals = np.linspace(self.a_min, self.a_max, 100)
         plt.yscale("log")
         plt.plot(a_vals, self.size_func(a_vals))
+
+    def get_mie_dsigma_dOmega(self, a, theta, E):
+        print("WARNING: The Mie routine is still a work in progress. Results may not be trustworthy.")
+        if not self._mie_loaded:
+            self._load_mie_table()
+        
+        # check bounds
+        var_dict = {"Energy":E, "Size":a, "ThetaObs":theta}
+        for var in var_dict:
+            min = self._mie_table[var].min()
+            max = self._mie_table[var].max()
+            if var_dict[var] < min or var_dict[var] > max:
+                print("Mie data only available for {var} values between {min} and {max}.")
+                raise(LookupError)
+
+        #get closest vals and create mask
+        mask = self._mie_table["Energy"] >= 0
+        for var in var_dict:
+            closest_index = abs(self._mie_table[var] - var_dict[var]).argmin()
+            closest_val = self._mie_table.iloc[closest_index][var]
+            mask = mask & (self._mie_table[var] == closest_val)
+        
+        return np.array(self._mie_table[mask]["Intensity"])[0]
+
+    def _load_mie_table(self):
+        if self._mie_file is None:
+            raise(FileNotFoundError) #AUTUMN: FIX ERRORS
+        
+        hdu = fits.open(self._mie_file)
+        self._mie_table = Table(hdu[1].data).to_pandas()
 
     def _total_mass(self):
         """
@@ -92,7 +130,8 @@ class Silicate(Dust):
             rho = 3.3, #g/cm^3
             ppm = 33,
             atom_weight = 172,
-            henke_F = interpolate.interp1d(henke_E, henke_F))
+            henke_F = interpolate.interp1d(henke_E, henke_F),
+            mie_file = "dust_data/DsdO_3.30.fits")
 
     def size_func(self, a):
         # return grains/H_atom/um for grain size a in um
@@ -113,7 +152,8 @@ class Graphite(Dust):
             rho = 2.2, #g/cm^3
             ppm = 270,
             atom_weight = 12,
-            henke_F = interpolate.interp1d(henke_E, henke_F))
+            henke_F = interpolate.interp1d(henke_E, henke_F),
+            mie_file = "dust_data/DsdO_2.20.fits")
 
     def size_func(self, a):
         return a**-3.5
