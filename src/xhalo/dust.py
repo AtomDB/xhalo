@@ -35,7 +35,7 @@ class Dust:
     """
 
     def __init__(self, name, size_func, a_min, a_max, \
-                 rho, ppm, atom_weight, henke_F):
+                 rho, ppm, atom_weight, henke_F, file = None):
         self.name = name
         self.a_min = a_min #um
         self.a_max = a_max #um

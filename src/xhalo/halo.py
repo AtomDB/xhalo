@@ -95,6 +95,12 @@ class Halo:
                   - 4 * K1**5 * sii(2*K1)) / (30 * K1**6)
         
         return c * a**6 * F * (dust.rho/3.0)**2 * y1
+    
+    def _mie_dsigma_dOmega(self, a, dust, theta):
+        """
+        Calculate Mie solution to dsigma/dOmega
+        """
+        return 0
 
 
     def I(self, theta):
