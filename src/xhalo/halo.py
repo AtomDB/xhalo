@@ -136,7 +136,7 @@ class Halo:
                 I_vals = np.empty(thetas.size)
                 for index,theta in enumerate(thetas):
                     I_vals[index] = self.dust_I(dust, theta)
-                ax.plot(thetas, I_vals, label = f"{dust.name},{self.scatter_model}")
+                ax.plot(thetas, I_vals, label = f"{dust.name}, {self.scatter_model}")
 
         #plot overall intensity
         thetas = np.linspace(5,30,100)
