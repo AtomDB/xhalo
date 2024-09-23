@@ -71,8 +71,14 @@ class Dust:
 
     def plot_size_func(self):
         from matplotlib import pyplot as plt
+        fig,ax = plt.subplots(1, 1, figsize=(8,4))
+        ax.set_title("Size Function")
+        ax.set_ylabel("Proportion (Unnormalized)")
+        ax.set_xlabel("Dust Size [$\mu m$]")
+        ax.set_yscale("log")
+
+
         a_vals = np.linspace(self.a_min, self.a_max, 100)
-        plt.yscale("log")
         plt.plot(a_vals, self.size_func(a_vals))
 
     def get_mie_dsigma_dOmega(self, a, theta, E):

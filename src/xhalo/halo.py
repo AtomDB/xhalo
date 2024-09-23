@@ -104,9 +104,12 @@ class Halo:
         return dust.get_mie_dsigma_dOmega(a, theta, self.E)
 
     def I(self, theta):
-        I = 0
-        for dust in self.dust_model:
-            I += self.dust_I(dust, theta)
+        theta = np.atleast_1d(theta)
+        I = np.zeros(theta.shape)
+
+        for index,theta in enumerate(theta):
+            for dust in self.dust_model:
+                I[index] += self.dust_I(dust, theta)
         return I
     
     def dust_I(self, dust, theta):
@@ -115,10 +118,32 @@ class Halo:
         integration = integrate.quad(integrand, dust.a_min, dust.a_max)
         return self.N_H * integration[0]
     
-    def plot_I(self):
+    def plot_I(self, including_dusts = True, figax = None):
         from matplotlib import pyplot as plt
+        if figax is None:
+            fig, ax = plt.subplots(1, 1, figsize=(8,4))
+        else:
+            fig, ax = figax
+        ax.set_title("xRay Halo Intensity")
+        ax.set_xlabel(r"$\theta_{obs}$ [arcsec]")
+        ax.set_ylabel(r"Intensity")
+        ax.set_yscale("log")
+
+        #plot dust intensities if signified
+        if including_dusts:
+            for dust in self.dust_model:
+                thetas = np.linspace(5,30,100)
+                I_vals = np.empty(thetas.size)
+                for index,theta in enumerate(thetas):
+                    I_vals[index] = self.dust_I(dust, theta)
+                ax.plot(thetas, I_vals, label = f"{dust.name},{self.scatter_model}")
+
+        #plot overall intensity
         thetas = np.linspace(5,30,100)
         I_vals = np.empty(thetas.size)
         for index,theta in enumerate(thetas):
             I_vals[index] = self.I(theta)
-        plt.plot(thetas, I_vals)
+        ax.plot(thetas, I_vals, label = f"Total, {self.scatter_model}")
+
+        ax.legend()
+        return fig, ax
