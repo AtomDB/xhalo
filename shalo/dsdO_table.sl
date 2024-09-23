@@ -149,10 +149,10 @@ define dsdO_val(a, En, Theta, dust) {
    result = 0.0;
    for (i=0;i<2;i++) {
       for (j=0;j<2;j++) {
-	 for (k=0;k<2;k++) {
-	    result = result + wt_i[i]*wt_j[j]*wt_k[k]*
-	      dust.dsdO[k_Elo+k,j_Alo+j,i_Tlo+i];
-	 }
+	      for (k=0;k<2;k++) {
+	         result = result 
+                     + wt_i[i]*wt_j[j] * wt_k[k] * dust.dsdO[k_Elo+k,j_Alo+j,i_Tlo+i];
+	      }
       }
    }
    return result/table_norm(a,dust);

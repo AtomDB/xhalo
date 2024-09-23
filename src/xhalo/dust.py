@@ -71,13 +71,11 @@ class Dust:
 
     def plot_size_func(self):
         from matplotlib import pyplot as plt
-        import numpy as np
         a_vals = np.linspace(self.a_min, self.a_max, 100)
         plt.yscale("log")
         plt.plot(a_vals, self.size_func(a_vals))
 
     def get_mie_dsigma_dOmega(self, a, theta, E):
-        print("WARNING: The Mie routine is still a work in progress. Results may not be trustworthy.")
         if not self._mie_loaded:
             self._load_mie_table()
         
@@ -96,8 +94,10 @@ class Dust:
             closest_index = abs(self._mie_table[var] - var_dict[var]).argmin()
             closest_val = self._mie_table.iloc[closest_index][var]
             mask = mask & (self._mie_table[var] == closest_val)
-        
-        return np.array(self._mie_table[mask]["Intensity"])[0]
+
+        intensity = np.array(self._mie_table[mask]["Intensity"])[0] 
+        table_norm = (self.ppm * 1e-6 * self.atom_weight)/(constants.N_A * self._mass_grain(a))
+        return intensity / table_norm #/ self._mass_grain(a)
 
     def _load_mie_table(self):
         if self._mie_file is None:
@@ -106,14 +106,16 @@ class Dust:
         hdu = fits.open(self._mie_file)
         self._mie_table = Table(hdu[1].data).to_pandas()
 
+    def _mass_grain(self, a):
+        return (4/3) * math.pi * (a/1e4)**3 * self.rho
+    
     def _total_mass(self):
         """
         Return total mass of dust per H_atom [g/H_atom]
         """
-        def mass_dist(a):
-            return self.size_func(a) * (4/3) * math.pi * (a/1e4)**3 * self.rho
-        
-        return integrate.quad(mass_dist, self.a_min, self.a_max)[0]
+        def integrand(a):
+            return self.size_func(a) * self._mass_grain(a)
+        return integrate.quad(integrand, self.a_min, self.a_max)[0]
 
 class Silicate(Dust):
     def __init__(self):

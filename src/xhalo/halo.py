@@ -1,6 +1,7 @@
 import scipy.integrate as integrate
 import numpy as np
 import math
+
 class Halo:
     """
     Class representing the halo created by dust scattering xray light. 
@@ -40,7 +41,7 @@ class Halo:
         if self.scatter_model == "GaussRG":
             self.dsigma_dOmega = self._gaussRG_dsigma_dOmega
         elif self.scatter_model == "InfCylRG":
-            print("The exact Rayleigh Gans Approximation has not yet been introduced to this program.")
+            print("WARNING: The exact Rayleigh Gans Approximation has not yet been introduced to this program.")
         elif self.scatter_model == "ExactRG":
             self.dsigma_dOmega = self._exactRG_dsigma_dOmega
         elif self.scatter_model == "Mie":
@@ -109,7 +110,6 @@ class Halo:
         return I
     
     def dust_I(self, dust, theta):
-        import scipy.integrate as integrate
         def integrand(a):
             return dust.n(a) * self.dsigma_dOmega(a, dust, theta)
         integration = integrate.quad(integrand, dust.a_min, dust.a_max)
