@@ -259,7 +259,7 @@ class WD(Dust):
             dnda = (cs/a) * (a/ats)**alphas
 
             if betas >= 0:
-	            dnda = dnda * (1 + betas*(a/ats))
+	            dnda = dnda * (1 + betas*(a/ats)) 
             else:
                 dnda = dnda / (1 - betas*(a/ats))
 
